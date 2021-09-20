@@ -1,7 +1,12 @@
-/**
- * Implementation file for table
- * 
- * Author: Bradley Henderson
+/*
+  Implementation file for table class
+
+  Takes in 1 or 2 int values and generates an empty table of eithor a square or retangle respectivly. There are various methods for manipluating the tables.
+
+  KNOWN BUGS:
+  1. operator<< in compiler says it refuses to take setw, however it does compile and work anyways
+
+  Author: Bradley Henderson
 */
 
 #include <cstdlib>
@@ -9,7 +14,7 @@
 #include "table.h"
 
 
-/*setw(width) fails on compiling class, but works with compiling tests*/
+//Allows the user to print the table logically
 template<typename T>
 ostream& operator<<(ostream& out, const Table<T>& table)
 {
@@ -31,6 +36,7 @@ ostream& operator<<(ostream& out, const Table<T>& table)
     return out;
 }
 
+//Allows the user to add anything to the table through a function
 template<typename T>
 Table<T> operator+(Table<T>& oldTable, T (*f)(T))
 {
@@ -47,6 +53,7 @@ Table<T> operator+(Table<T>& oldTable, T (*f)(T))
   return newTable;
 }
 
+//Constructor that takes 2 integer inputs for table sizing
 template<typename T>
 Table<T>::Table(const int row, const int column)
 {
@@ -57,6 +64,7 @@ Table<T>::Table(const int row, const int column)
         pTable[i] = new T[column];
 }
 
+//Constructor that takes 1 integer input for table sizing
 template<typename T>
 Table<T>::Table(int dimensions)
 {
@@ -67,6 +75,7 @@ Table<T>::Table(int dimensions)
         pTable[i] = new T[dimensions];
 }
 
+//Copy constructor, copies one table to the next
 template<typename T>
 Table<T>::Table(Table<T>& newTable)
 {
@@ -84,6 +93,7 @@ Table<T>::Table(Table<T>& newTable)
     columnCount = newTable.columnCount;
 }
 
+//Allows the user to set one table equal to the other
 template<typename T>
 Table<T>& Table<T>::operator=(const Table<T>& newTable)
 {
@@ -106,6 +116,7 @@ Table<T>& Table<T>::operator=(const Table<T>& newTable)
     return *this;
 }
 
+//Destructor
 template<typename T>
 Table<T>::~Table()
 {
@@ -116,18 +127,21 @@ Table<T>::~Table()
     columnCount = 0;
 }
 
+//Allows the user to return the number of rows in the table
 template<typename T>
 int Table<T>::get_rows()
 {
     return rowCount;
 }
 
+//Allows the user to return the number of columns in the table
 template<typename T>
 int Table<T>::get_cols()
 {
     return columnCount;
 }
 
+//Allows the user to add rows to an existing table
 template<typename T>
 Table<T> Table<T>::append_rows(const Table<T>& oldTable)
 {
@@ -154,6 +168,7 @@ Table<T> Table<T>::append_rows(const Table<T>& oldTable)
   return newTable;
 }
 
+//Allows the user to add columns to an existing table
 template<typename T>
 Table<T> Table<T>::append_cols(const Table<T>& oldTable)
 {
@@ -179,12 +194,14 @@ Table<T> Table<T>::append_cols(const Table<T>& oldTable)
   return newTable;
 }
 
+//Allows the user to get a value at specified cordinates in the table
 template<typename T>
 T& Table<T>::operator()(int row, int column)
 {
     return pTable[row][column];
 }
 
+//Allows the user to get a sub-table based off the main table, inclusively
 template<typename T>
 Table<T> Table<T>::operator()(int row1, int column1, int row2, int column2)
 {
@@ -192,6 +209,7 @@ Table<T> Table<T>::operator()(int row1, int column1, int row2, int column2)
     int newColumnCount = abs(column1-column2)+1;
     Table<T> newTable(newRowCount, newColumnCount);
 
+    //Checks for the biggest so it doesn't matter which way the cordinates are placed in
     int biggerRow = row2;
     int smallerRow = row1;
     int biggerColumn = column2;
