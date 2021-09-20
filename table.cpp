@@ -4,7 +4,7 @@
   Takes in 1 or 2 int values and generates an empty table of eithor a square or retangle respectivly. There are various methods for manipluating the tables.
 
   KNOWN BUGS:
-  1. operator<< in compiler says it refuses to take setw, however it does compile and work anyways
+  1. operator<< says it refuses to take setw, however it does compile and work anyways
 
   Author: Bradley Henderson
 */
@@ -21,9 +21,9 @@ ostream& operator<<(ostream& out, const Table<T>& table)
     const int width = out.width();
 
     if(table.rowCount == 0)
-        return out << "null";
+        return out << "∅";
     else if(table.columnCount == 0)
-        return out << "null";
+        return out << "∅";
 
     for(int row = 0; row < table.rowCount; row++)
     {
