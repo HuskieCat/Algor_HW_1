@@ -18,22 +18,22 @@
 template<typename T>
 ostream& operator<<(ostream& out, const Table<T>& table)
 {
-    const int width = out.width();
+  const int width = out.width();
 
-    if(table.rowCount == 0)
-        return out << "∅";
-    else if(table.columnCount == 0)
-        return out << "∅";
+  if(table.rowCount == 0)
+    return out << "∅";
+  else if(table.columnCount == 0)
+    return out << "∅";
 
-    for(int row = 0; row < table.rowCount; row++)
+  for(int row = 0; row < table.rowCount; row++)
+  {
+    for(int column = 0; column < table.columnCount; column++)
     {
-        for(int column = 0; column < table.columnCount; column++)
-        {
-            out << setw(width) << table.pTable[row][column];
-        }
-        out<<endl;
+      out << setw(width) << table.pTable[row][column];
     }
-    return out;
+    out<<endl;
+  }
+  return out;
 }
 
 //Allows the user to add anything to the table through a function
@@ -57,88 +57,88 @@ Table<T> operator+(Table<T>& oldTable, T (*f)(T))
 template<typename T>
 Table<T>::Table(const int row, const int column)
 {
-    rowCount = row;
-    columnCount = column;
-    pTable = new T*[row];
-    for(int i = 0; i < row; i++)
-        pTable[i] = new T[column];
+  rowCount = row;
+  columnCount = column;
+  pTable = new T*[row];
+  for(int i = 0; i < row; i++)
+  pTable[i] = new T[column];
 }
 
 //Constructor that takes 1 integer input for table sizing
 template<typename T>
 Table<T>::Table(int dimensions)
 {
-    rowCount = dimensions;
-    columnCount = dimensions;
-    pTable = new T*[dimensions];
-    for(int i = 0; i < dimensions; i++)
-        pTable[i] = new T[dimensions];
+  rowCount = dimensions;
+  columnCount = dimensions;
+  pTable = new T*[dimensions];
+  for(int i = 0; i < dimensions; i++)
+  pTable[i] = new T[dimensions];
 }
 
 //Copy constructor, copies one table to the next
 template<typename T>
 Table<T>::Table(Table<T>& newTable)
 {
-    pTable = new T*[newTable.rowCount];
-    for(int row = 0; row < newTable.rowCount; row++)
+  pTable = new T*[newTable.rowCount];
+  for(int row = 0; row < newTable.rowCount; row++)
+  {
+    pTable[row] = new T[newTable.columnCount];
+    for(int column = 0; column < newTable.columnCount; column++)
     {
-        pTable[row] = new T[newTable.columnCount];
-        for(int column = 0; column < newTable.columnCount; column++)
-        {
-            pTable[row][column] = newTable.pTable[row][column];
-        }
+      pTable[row][column] = newTable.pTable[row][column];
     }
+  }
 
-    rowCount = newTable.rowCount;
-    columnCount = newTable.columnCount;
+  rowCount = newTable.rowCount;
+  columnCount = newTable.columnCount;
 }
 
 //Allows the user to set one table equal to the other
 template<typename T>
 Table<T>& Table<T>::operator=(const Table<T>& newTable)
 {
-    //Erase the table
-    for(int row = 0; row < rowCount; row++)
-        delete[] pTable[row];
-    delete[] pTable;
+  //Erase the table
+  for(int row = 0; row < rowCount; row++)
+    delete[] pTable[row];
+  delete[] pTable;
 
-    pTable = new T*[newTable.rowCount];
-    for(int row = 0; row < newTable.rowCount; row++)
+  pTable = new T*[newTable.rowCount];
+  for(int row = 0; row < newTable.rowCount; row++)
+  {
+    pTable[row] = new T[newTable.columnCount];
+    for(int column = 0; column < newTable.columnCount; column++)
     {
-        pTable[row] = new T[newTable.columnCount];
-        for(int column = 0; column < newTable.columnCount; column++)
-        {
-            pTable[row][column] = newTable.pTable[row][column];
-        }
+      pTable[row][column] = newTable.pTable[row][column];
     }
-    rowCount = newTable.rowCount;
-    columnCount = newTable.columnCount;
-    return *this;
+  }
+  rowCount = newTable.rowCount;
+  columnCount = newTable.columnCount;
+  return *this;
 }
 
 //Destructor
 template<typename T>
 Table<T>::~Table()
 {
-    for(int row = 0; row < rowCount; row++)
-        delete[] pTable[row];
-    delete[] pTable;
-    rowCount = 0;
-    columnCount = 0;
+  for(int row = 0; row < rowCount; row++)
+    delete[] pTable[row];
+  delete[] pTable;
+  rowCount = 0;
+  columnCount = 0;
 }
 
 //Allows the user to return the number of rows in the table
 template<typename T>
 int Table<T>::get_rows()
 {
-    return rowCount;
+  return rowCount;
 }
 
 //Allows the user to return the number of columns in the table
 template<typename T>
 int Table<T>::get_cols()
 {
-    return columnCount;
+  return columnCount;
 }
 
 //Allows the user to add rows to an existing table
@@ -198,41 +198,41 @@ Table<T> Table<T>::append_cols(const Table<T>& oldTable)
 template<typename T>
 T& Table<T>::operator()(int row, int column)
 {
-    return pTable[row][column];
+  return pTable[row][column];
 }
 
 //Allows the user to get a sub-table based off the main table, inclusively
 template<typename T>
 Table<T> Table<T>::operator()(int row1, int column1, int row2, int column2)
 {
-    int newRowCount = abs(row1-row2)+1;
-    int newColumnCount = abs(column1-column2)+1;
-    Table<T> newTable(newRowCount, newColumnCount);
+  int newRowCount = abs(row1-row2)+1;
+  int newColumnCount = abs(column1-column2)+1;
+  Table<T> newTable(newRowCount, newColumnCount);
 
-    //Checks for the biggest so it doesn't matter which way the cordinates are placed in
-    int biggerRow = row2;
-    int smallerRow = row1;
-    int biggerColumn = column2;
-    int smallerColumn = column1;
+  //Checks for the biggest so it doesn't matter which way the cordinates are placed in
+  int biggerRow = row2;
+  int smallerRow = row1;
+  int biggerColumn = column2;
+  int smallerColumn = column1;
 
-    if(row1 > row2)
+  if(row1 > row2)
+  {
+    biggerRow = row1;
+    smallerRow = row2;
+  }
+  if(column1 > column2)
+  {
+    biggerColumn = column1;
+    smallerColumn = column2;
+  }
+
+  for(int row = smallerRow; row < biggerRow+1; row++)
+  {
+    for(int column = smallerColumn; column < biggerColumn+1; column++)
     {
-        biggerRow = row1;
-        smallerRow = row2;
+      newTable.pTable[row-smallerRow][column-smallerColumn] = pTable[row][column];
     }
-    if(column1 > column2)
-    {
-        biggerColumn = column1;
-        smallerColumn = column2;
-    }
+  }
 
-    for(int row = smallerRow; row < biggerRow+1; row++)
-    {
-        for(int column = smallerColumn; column < biggerColumn+1; column++)
-        {
-          newTable.pTable[row-smallerRow][column-smallerColumn] = pTable[row][column];
-        }
-    }
-
-    return newTable;
+  return newTable;
 }
